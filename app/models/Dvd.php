@@ -27,4 +27,22 @@ class Dvd extends Eloquent {
     public function sound() {
         return $this->belongsTo("Sound");
     }
+
+    public static function getAll($title, $genreId, $ratingId) {
+        $relation = self::with(["format", "genre", "label", "rating", "sound"])
+            ->where("title", "LIKE", "%$title%");
+
+        if ($genreId != 0) {
+            $relation->where("genre_id", "=", $genreId);
+        }
+
+        if ($ratingId != 0) {
+            $relation->where("rating_id", "=", $ratingId);
+        }
+
+        $dvds = $relation->take(30)
+            ->get();
+
+        return $dvds;
+    }
 } 

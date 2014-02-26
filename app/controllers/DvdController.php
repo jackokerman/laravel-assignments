@@ -23,22 +23,10 @@ class DvdController extends BaseController {
         $genreId = Input::get("genre");
         $ratingId = Input::get("rating");
 
-        $relation = Dvd::with(["format", "genre", "label", "rating", "sound"])
-            ->where("title", "LIKE", "%$title%");
-
-        if ($genreId != 0) {
-            $relation->where("genre_id", "=", $genreId);
-        }
-
-        if ($ratingId != 0) {
-            $relation->where("rating_id", "=", $ratingId);
-        }
-
-        $dvds = $relation->take(30)
-            ->get();
-
         $genre = ($genreId == 0) ? "All" : Genre::find($genreId)->genre_name;
         $rating = ($ratingId == 0) ? "All" : Rating::find($ratingId)->rating_name;
+
+        $dvds = DVD::getAll($title, $genreId, $ratingId);
 
         return View::make("dvds/dvds", [
             "title" => $title,
