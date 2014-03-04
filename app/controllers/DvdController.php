@@ -37,6 +37,7 @@ class DvdController extends BaseController {
     }
 
     public function createDvd() {
+
         $formats = Format::all();
         $genres = Genre::all();
         $labels = Label::all();
@@ -54,17 +55,29 @@ class DvdController extends BaseController {
 
     public function insertDvd() {
 
-        $dvd = new Dvd();
-        $dvd->title = Input::get("title");
-        $dvd->label_id = Input::get("label");
-        $dvd->sound_id = Input::get("sound");
-        $dvd->genre_id = Input::get("genre");
-        $dvd->rating_id = Input::get("rating");
-        $dvd->format_id = Input::get("format");
-        $dvd->save();
+        $validation = Dvd::validate(Input::all());
+
+        if ($validation->passes()) {
+            $dvd = new Dvd();
+            $dvd->title = Input::get("title");
+            $dvd->label_id = Input::get("label");
+            $dvd->sound_id = Input::get("sound");
+            $dvd->genre_id = Input::get("genre");
+            $dvd->rating_id = Input::get("rating");
+            $dvd->format_id = Input::get("format");
+            $dvd->save();
+
+            return Redirect::to("dvds/create")
+                ->with("success", "<strong><em>$dvd->title</em></strong> was successfully inserted into the DVD database.");
+        }
+
+//        var_dump(Input::all());
+//        dd($validation->messages());
+
 
         return Redirect::to("dvds/create")
-            ->with("success", "<strong><em>$dvd->title</em></strong> was successfully inserted into the DVD database.");
+            ->withInput()
+            ->with("errors", $validation->messages());
 
     }
 

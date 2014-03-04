@@ -22,3 +22,20 @@ Route::get("/dvds/search", "DvdController@search");
 Route::get("/dvds", "DvdController@listDvds");
 Route::post("/dvds", "DvdController@insertDvd");
 Route::get("/dvds/create", "DvdController@createDvd");
+
+Route::get("/omdb/results", function() {
+    $title = Input::get("title");
+    $omdb = new \Itp\Api\OMDBSearch();
+
+    $json = $omdb->getResults($title);
+
+//    dd($json);
+
+    return View::make("omdb/results", [
+        "movie" => $json
+    ]);
+});
+
+Route::get("/omdb/search", function() {
+    return View::make("omdb/search");
+});

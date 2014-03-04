@@ -15,17 +15,26 @@
                             <?php echo Session::get("success") ?>
                         </div>
                     <?php endif; ?>
+                    <?php foreach($errors->all() as $error) : ?>
+                        <div class="alert alert-danger">
+                            <?php echo $error ?>
+                        </div>
+                    <?php endforeach; ?>
                     <form method="post" action="/dvds">
                         <div class="form-group">
                             <label>Title</label>
-                            <input type="text" class="form-control" name="title">
+                            <input type="text" class="form-control" name="title" value="<?php echo Input::old("title")?>">
                         </div>
                         <div class="form-group">
                             <label>Genre</label>
                             <select class="form-control" name="genre">
                                 <?php
                                 foreach ($genres as $genre) {
-                                    echo "<option value=$genre->id>$genre->genre_name</option>";
+                                    $option = "<option value=$genre->id";
+                                    if (Input::old("genre") == $genre->id)
+                                        $option .= " selected";
+                                    $option .= ">$genre->genre_name</option>";
+                                    echo $option;
                                 }
                                 ?>
                             </select>
@@ -35,7 +44,11 @@
                             <select class="form-control" name="rating">
                                 <?php
                                 foreach ($ratings as $rating) {
-                                    echo "<option value=$rating->id>$rating->rating_name</option>";
+                                    $option = "<option value=$rating->id";
+                                    if (Input::old("rating") == $rating->id)
+                                        $option .= " selected";
+                                    $option .= ">$rating->rating_name</option>";
+                                    echo $option;
                                 }
                                 ?>
                             </select>
@@ -45,8 +58,13 @@
                             <select class="form-control" name="label">
                                 <?php
                                 foreach ($labels as $label) {
-                                    if (! is_null($label->label_name))
-                                        echo "<option value=$label->id>$label->label_name</option>";
+                                    if (! is_null($label->label_name)) {
+                                        $option = "<option value=$label->id";
+                                        if (Input::old("label") == $label->id)
+                                            $option .= " selected";
+                                        $option .= ">$label->label_name</option>";
+                                        echo $option;
+                                    }
                                 }
                                 ?>
                             </select>
@@ -56,7 +74,11 @@
                             <select class="form-control" name="sound">
                                 <?php
                                 foreach ($sounds as $sound) {
-                                    echo "<option value=$sound->id>$sound->sound_name</option>";
+                                    $option = "<option value=$sound->id";
+                                    if (Input::old("sound") == $sound->id)
+                                        $option .= " selected";
+                                    $option .= ">$sound->sound_name</option>";
+                                    echo $option;
                                 }
                                 ?>
                             </select>
@@ -66,8 +88,11 @@
                             <select class="form-control" name="format">
                                 <?php
                                 foreach ($formats as $format) {
-                                    echo "<option value=$format->id>$format->format_name</option>";
-                                }
+                                    $option = "<option value=$format->id";
+                                    if (Input::old("format") == $format->id)
+                                        $option .= " selected";
+                                    $option .= ">$format->format_name</option>";
+                                    echo $option;                                }
                                 ?>
                             </select>
                         </div>
